@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>404 - Page not found</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3f6fb;
+      --surface: #ffffff;
+      --ink: #10203a;
+      --muted: #5b6b84;
+      --line: #d5deec;
+      --accent: #1f4fd8;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --bg: #0d1626;
+        --surface: #15223a;
+        --ink: #e8eefb;
+        --muted: #9aaac6;
+        --line: #2a3b5c;
+        --accent: #6d93ff;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      display: grid;
+      place-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 24px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+      text-align: center;
+    }
+    main {
+      width: 100%;
+      max-width: 480px;
+      padding: 40px 32px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+    .code {
+      margin: 0;
+      color: var(--accent);
+      font-size: clamp(4rem, 18vw, 7rem);
+      font-weight: 800;
+      letter-spacing: -0.07em;
+      line-height: 1;
+    }
+    h1 { margin: 20px 0 8px; font-size: 1.6rem; }
+    p { margin: 0 0 24px; color: var(--muted); line-height: 1.6; }
+    a {
+      display: inline-block;
+      padding: 11px 18px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    a:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="code" aria-hidden="true">404</p>
+    <h1>Page not found</h1>
+    <p>This short link may be incorrect, expired, or no longer available.</p>
+    <a href="/">Back to home</a>
+  </main>
+</body>
+</html>
