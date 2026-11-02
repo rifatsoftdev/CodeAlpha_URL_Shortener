@@ -1,21 +1,34 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+from app.env import ENV
 
 
 
-DATABASE_URL = "sqlite:////app/database.db"
+if ENV.DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(
+        ENV.DATABASE_URL,
+        connect_args={"check_same_thread": False}
+    )
+else:
+    engine = create_engine(ENV.DATABASE_URL)
 
 
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False}
-)
 SessionLocal = sessionmaker(
-    bind=engine,
-    autocommit=False, 
-    autoflush=False
+    autocommit=False,
+    autoflush=False,
+    bind=engine
 )
+
 Base = declarative_base()
+
+# Models import
+import app.models
+
+# ✅ Create all tables in DB
+Base.metadata.create_all(bind=engine)
+
 
 
 def get_db():
@@ -24,7 +37,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
 
 
 

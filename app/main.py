@@ -7,19 +7,30 @@ from fastapi.responses import RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.util import get_remote_address
+
 
 from app.database import engine, Base, get_db
 from app.models import URL
 from app.schema import URLCreate
 
-Base.metadata.create_all(bind=engine)
+
 
 URL_LIFETIME = timedelta(days=14)
 
 
+limiter = Limiter(key_func=get_remote_address)
+
 app = FastAPI(
     title="URL Shortener Server"
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -79,6 +90,7 @@ def get_real_url(url: str, request: Request, db: Session = Depends(get_db)):
 
 
 @app.post("/add-new-url")
+@limiter.limit("10/minute")
 def add_new_url(payload: URLCreate, request: Request, db: Session = Depends(get_db)):
     now = datetime.now(timezone.utc).replace(tzinfo=None)
 

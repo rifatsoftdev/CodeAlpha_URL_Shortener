@@ -22,7 +22,7 @@ Python and pip are not required on the host machine; the application runs in a D
 Build the image from the project directory:
 
 ```bash
-docker build -t url-shortener .
+docker build --no-cache -t url-shortener .
 ```
 
 Start the container:
@@ -33,6 +33,11 @@ docker run -d \
   -p 8000:8000 \
   --mount type=bind,source="$(pwd)/database.db",target=/app/database.db \
   url-shortener
+```
+
+To view application logs:
+```bash
+docker logs -f url-shortener
 ```
 
 The named Docker volume `url-shortener-data` keeps the SQLite database when the container is removed or recreated. To start the existing container again, use `docker start url-shortener`.

@@ -165,7 +165,7 @@
     setMsg("");
 
     if (window.location.protocol === "file:") {
-      setMsg("Run the app and open it at http://192.168.1.100:8000 to create short links.", true);
+      setMsg("Run the app and open to create short links.", true);
       return;
     }
 
@@ -183,10 +183,15 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url })
       });
+
       const data = await res.json();
+
       if (!res.ok) {
-        throw new Error(typeof data.detail === "string" ? data.detail : "That URL is not valid.");
+        const message = typeof data.detail === "string" ? data.detail : res.status === 429 ? "Too Many Requests." : "That URL is not valid.";
+
+        throw new Error(message);
       }
+
       shortLink.textContent = data.short_url;
       shortLink.href = data.short_url;
       copyBtn.textContent = "Copy";
@@ -218,6 +223,7 @@
     textarea.select();
 
     const copied = document.execCommand("copy");
+    
     textarea.remove();
     if (!copied) {
       throw new Error("Clipboard access is unavailable.");
